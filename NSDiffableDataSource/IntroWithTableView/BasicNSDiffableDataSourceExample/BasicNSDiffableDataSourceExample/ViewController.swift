@@ -28,80 +28,39 @@ class ViewController: UIViewController {
             
             // Edit the configuration:
             // 1. Get the default content configuration:
-            var content = cell.defaultContentConfiguration()
             // 2. Assign the city name to the cell's text.
-            content.text = city.name
-            
-            // Convert the population into a readable string
-            let numberFormatter = NumberFormatter()
-            numberFormatter.numberStyle = .decimal
-            let pop = numberFormatter.string(from: NSNumber(value:city.population))
-            
-            // 3. Assign the population text to the cell
-            content.secondaryText = "Population \(pop ?? "")"
-            
-            // 3. Update the cell with the new configuration:
-            cell.contentConfiguration = content
-            
+            // 3. Convert the population into a readable string
+            // 4. Assign the population text to the cell
+            // 5. Update the cell with the new configuration:
             return cell
         }
     }
     
     private func configureInitialSnapshot() {
         // 1. Create the new snapshot
-        var snapshot = NSDiffableDataSourceSnapshot<Section, CityInformation>()
         
         // 2. Add Illinois section to the snapshot
-        snapshot.appendSections([.Illinois])
         
         // 3. Add cities to the Illinois section
-        let chicago = CityInformation(name: "Chicago", population: 2710000)
-        let springfieldIL = CityInformation(name: "Springfield", population: 115888)
-        let champaign = CityInformation(name: "Champaign", population: 87636)
-        let bloomington = CityInformation(name: "Bloomington", population: 132600)
-        snapshot.appendItems([chicago, springfieldIL, champaign, bloomington], toSection: .Illinois)
+        // let chicago = CityInformation(name: "Chicago", population: 2710000)
+        // let springfieldIL = CityInformation(name: "Springfield", population: 115888)
+        // let champaign = CityInformation(name: "Champaign", population: 87636)
+        // let bloomington = CityInformation(name: "Bloomington", population: 132600)
         
         // 4. Add Missouri section to the snapshot
-        snapshot.appendSections([.Missouri])
         
         // 3. Add cities to the Missouri section
-        let stl = CityInformation(name: "St Louis", population: 308174)
-        let springfieldMO = CityInformation(name: "Springfield", population: 167051)
-        let columbia = CityInformation(name: "Columbia", population: 121230)
-        snapshot.appendItems([stl, springfieldMO, columbia], toSection: .Missouri)
+        // let stl = CityInformation(name: "St Louis", population: 308174)
+        // let springfieldMO = CityInformation(name: "Springfield", population: 167051)
+        // let columbia = CityInformation(name: "Columbia", population: 121230)
         
         // 5. Now that we are done adding sections and row data, apply it to the data source
-        self.dataSource.apply(snapshot, animatingDifferences: false)
     }
     
     // MARK: - Access functions on the UITableView Data Source here:
     private class DataSource: UITableViewDiffableDataSource<Section, CityInformation> {
-        override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
-            if editingStyle == .delete {
-                removeRowFromSnapshot(at: indexPath)
-            }
-        }
-        
-        private func removeRowFromSnapshot(at indexPath: IndexPath) {
-            DispatchQueue.main.async {
-                // 1. Grab the identifier of the item we are deleting
-                if let idToDelete = self.itemIdentifier(for: indexPath) {
-                    // 2. Grab a reference to the snapshot
-                    var snapshot = self.snapshot()
-                    // 3. Delete the item from the snapshot
-                    snapshot.deleteItems([idToDelete])
-                    // 4. Apply the updated snapshot to the data source
-                    self.apply(snapshot, animatingDifferences: true)
-                }
-            }
-        }
-        
-        override func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
-            // 1. Get the section from the data source
-            guard let section = self.sectionIdentifier(for: section) else { return "" }
-            // 2. Use the header for section function we created
-            return section.headerForSection()
-        }
+        // 1. Allow editing on the table view to remove cities
+        //  2. Add header so we know which section is which
     }
 }
 
